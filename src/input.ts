@@ -67,12 +67,19 @@ export class Input {
       },
     });
     const pos = (e: PointerEvent) => ({ x: e.clientX / Math.max(1, innerWidth), y: e.clientY / Math.max(1, innerHeight) });
+    const onChrome = (e: Event) => {
+      const t = e.target;
+      return t instanceof Element && !!t.closest('button, a, input, textarea, select, label, #title, [data-ui]');
+    };
     el.addEventListener('pointermove', (e) => {
+      if (onChrome(e)) return;
       const p = this.ensurePtr(e);
       const q = pos(e);
       p.x = q.x; p.y = q.y; p.touch = e.pointerType === 'touch';
     });
     el.addEventListener('pointerdown', (e) => {
+      // Capturing the pointer on body would swallow the title-screen button click.
+      if (onChrome(e)) return;
       const p = this.ensurePtr(e);
       const q = pos(e);
       p.x = q.x; p.y = q.y; p.down = true; p.touch = e.pointerType === 'touch';

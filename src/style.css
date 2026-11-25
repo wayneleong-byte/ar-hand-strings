@@ -10,10 +10,10 @@
 * { box-sizing: border-box; }
 html, body {
   margin: 0; height: 100%; overflow: hidden;
-  background: #12151c; color: var(--ink);
+  background: #15181f; color: var(--ink);
   font: 500 15px/1.5 "Noto Sans TC", system-ui, sans-serif;
 }
-#stage, #stage canvas { position: fixed; inset: 0; display: block; }
+#stage, #stage canvas { position: fixed; inset: 0; display: block; z-index: 0; pointer-events: none; }
 #cam { position: fixed; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
 .hidden { display: none !important; }
 

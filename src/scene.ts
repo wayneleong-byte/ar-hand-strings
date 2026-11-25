@@ -1,5 +1,5 @@
 /**
- * 2D AR overlay: mirrored webcam (or a quiet studio backdrop in mouse/bot mode), MediaPipe-style
+ * 2D AR overlay: mirrored webcam (or a solid backdrop when there is no camera), MediaPipe-style
  * skeletons, coloured floating strings with pearl endpoints, labels, and pluck particles.
  * No post-processing, no bloom — glow is painted as soft strokes.
  */
@@ -11,6 +11,7 @@ import { pitchOfSegment } from './pitch';
 
 const BONE = '#2adf5a';
 const JOINT = '#ff2a2a';
+const SOLID_BG = '#15181f';
 
 export class Scene {
   readonly canvas: HTMLCanvasElement;
@@ -57,14 +58,7 @@ export class Scene {
     ctx.clearRect(0, 0, W, H);
 
     if (video && cover && video.readyState >= 2) this.drawVideo(video, cover);
-    else this.drawStudio();
-
-    // a very light vignette so HUD text stays readable
-    const g = ctx.createRadialGradient(W * 0.5, H * 0.45, H * 0.2, W * 0.5, H * 0.5, H * 0.9);
-    g.addColorStop(0, 'rgba(0,0,0,0)');
-    g.addColorStop(1, 'rgba(6,10,18,0.28)');
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, W, H);
+    else this.drawSolid();
 
     if (world.draft) this.drawString(world, { ...world.draft, id: -1, vibr: 0, vibrPhase: 0, cooldown: 0, pull: 0, pullX: 0, pullY: 0 }, true, new Set());
     for (const s of world.strings) this.drawString(world, s, false, grabbedEnds(world, s));
@@ -84,39 +78,10 @@ export class Scene {
     ctx.restore();
   }
 
-  /** Quiet ceiling-lit room, used when there is no camera. No people. */
-  private drawStudio() {
-    const ctx = this.ctx, W = this.w, H = this.h;
-    const sky = ctx.createLinearGradient(0, 0, 0, H);
-    sky.addColorStop(0, '#d8dde4');
-    sky.addColorStop(0.45, '#c5ccd6');
-    sky.addColorStop(1, '#8f97a4');
-    ctx.fillStyle = sky;
-    ctx.fillRect(0, 0, W, H);
-
-    // a soft ceiling panel in the upper left, echoing the reference room without copying it
-    ctx.fillStyle = 'rgba(255,255,255,0.55)';
-    ctx.beginPath();
-    ctx.roundRect(W * 0.04, H * 0.04, W * 0.28, H * 0.13, 6);
-    ctx.fill();
-    ctx.fillStyle = 'rgba(255,255,255,0.22)';
-    ctx.fillRect(0, 0, W, H * 0.02);
-
-    // a darker wall corner on the left
-    ctx.fillStyle = 'rgba(70,78,90,0.35)';
-    ctx.beginPath();
-    ctx.moveTo(0, H * 0.22);
-    ctx.lineTo(W * 0.22, H * 0.18);
-    ctx.lineTo(W * 0.22, H);
-    ctx.lineTo(0, H);
-    ctx.closePath();
-    ctx.fill();
-
-    // a window-ish rectangle on the right, no content
-    ctx.fillStyle = 'rgba(40,48,58,0.45)';
-    ctx.fillRect(W * 0.86, H * 0.62, W * 0.14, H * 0.38);
-    ctx.fillStyle = 'rgba(180,200,210,0.25)';
-    ctx.fillRect(W * 0.88, H * 0.68, W * 0.1, H * 0.22);
+  /** Flat backdrop used before the camera starts, and in mouse / bot mode. */
+  private drawSolid() {
+    this.ctx.fillStyle = SOLID_BG;
+    this.ctx.fillRect(0, 0, this.w, this.h);
   }
 
   private drawString(world: World, s: StringWire, draft: boolean, grabbed: Set<'a' | 'b'>) {

@@ -4,7 +4,7 @@
 
 ## Status
 
-可玩的 AR 雙手琴弦原型。全螢幕鏡像 webcam（或無鏡頭時的安靜房間背景）、MediaPipe 風格綠骨紅點、彩色懸浮弦、音名／頻率／長度標籤、端點拖曳、撥弦鋼琴音色。介面為繁體中文。原始碼已公開於 https://github.com/wayneleong-byte/ar-hand-strings ，線上試玩 https://wayneleong-byte.github.io/ar-hand-strings/ 。
+可玩的 AR 雙手琴弦原型。全螢幕鏡像 webcam（無鏡頭時為單色背景；開啟鏡頭後背景透明，只畫實況與疊加層）、MediaPipe 風格綠骨紅點、彩色懸浮弦、音名／頻率／長度標籤、端點拖曳、撥弦鋼琴音色。介面為繁體中文。原始碼已公開於 https://github.com/wayneleong-byte/ar-hand-strings ，線上試玩 https://wayneleong-byte.github.io/ar-hand-strings/ 。
 
 ## What works, and how it was verified
 
@@ -42,7 +42,7 @@ Verified 2026-11-25 (Asia/Macau) on this box, with synthetic hands only (no real
 
 - 從官方 `templates/game` starter 起步，保留鏡頭點擊啟動、滑鼠／觸控後備、`?bot=1`、測試鉤子與工具；規則、場景、聲音全部換掉。
 - 畫面是 2D canvas 疊在鏡像鏡頭上（對齊參考截圖），不是 starter 的 three.js 黃昏場景，因此拿掉了 three.js。
-- 不把參考截圖中的真實人臉當素材；無鏡頭時畫一個抽象的天花板房間。
+- 不把參考截圖中的真實人臉當素材；無鏡頭時是單色背景，開啟鏡頭後背景透明。
 - 套件現成雙手事件不夠用，故在 kit 之上自定拉弦／抓端點／撥弦，不改 `src/hand-gesture-kit/`。
 - 頻率先依 f ∝ 1/L 連續計算，再就近對到十二平均律，標籤顯示標準音名與整數 Hz，與參考 UI 一致。不必複製參考圖上每一條弦的厘米數字（那些讀數本身也不嚴格滿足單一常數）。
 
