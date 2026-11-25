@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>懸浮琴弦 — AR 雙手音樂遊戲</title>
+    <meta name="description" content="用雙手拇指與食指捏合拉出懸浮琴弦，弦長決定音高，劃過弦身即可撥奏。畫面與鏡頭不會離開這部裝置。" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='15' width='26' height='2' rx='1' fill='%235ee2c4'/%3E%3Ccircle cx='4' cy='16' r='3' fill='%23f7f4ee' stroke='%235ee2c4' stroke-width='1.5'/%3E%3Ccircle cx='28' cy='16' r='3' fill='%23f7f4ee' stroke='%235ee2c4' stroke-width='1.5'/%3E%3C/svg%3E" />
+  </head>
+  <body>
+    <div id="stage"></div>
+    <video id="cam" playsinline muted></video>
+
+    <div id="chrome" class="hidden">
+      <div id="topbar">
+        <div id="status" class="pill">
+          <span class="dot" aria-hidden="true"></span>
+          <span id="status-text">AR雙手琴弦追蹤進行中</span>
+          <span id="string-count" class="count">0 條懸浮弦</span>
+        </div>
+        <button id="b-clear" type="button">清空琴弦並重啟</button>
+      </div>
+
+      <div id="footer">
+        <div class="how">
+          <span class="mark">演奏手勢與操作：</span>
+          <span><b>1.</b> 雙手拇指與食指捏合（或滑鼠按住空白處）在空中拉出新琴弦</span>
+          <span><b>2.</b> 捏住琴弦兩端連線點即可拖動端點可改變音高（f ∝ 1/L）</span>
+          <span><b>3.</b> 指尖或游標劃過琴弦即可撥奏共鳴</span>
+        </div>
+        <div class="synth">
+          <span class="dot" aria-hidden="true"></span>
+          <span>Web Audio 物理定音合成</span>
+          <span class="sep">·</span>
+          <span>預設鋼琴音色</span>
+        </div>
+      </div>
+    </div>
+
+    <section id="title" class="card hidden">
+      <h1>懸浮琴弦</h1>
+      <svg class="pinch" viewBox="0 0 200 90" aria-hidden="true">
+        <path class="string" d="M18 45 H182" />
+        <circle class="pearl" cx="18" cy="45" r="5" />
+        <circle class="pearl" cx="182" cy="45" r="5" />
+        <path class="finger L-index" d="M46 78 C 50 62, 54 50, 62 42" />
+        <path class="finger L-thumb" d="M34 70 C 42 62, 50 54, 60 48" />
+        <path class="finger R-index" d="M154 78 C 150 62, 146 50, 138 42" />
+        <path class="finger R-thumb" d="M166 70 C 158 62, 150 54, 140 48" />
+      </svg>
+      <p>兩手拇指與食指捏合，在空中拉出一條弦。弦越長音越低，劃過弦身即可撥奏。再捏住端點，就能改變長度與角度。</p>
+      <div class="row">
+        <button id="b-cam" type="button">開啟鏡頭</button>
+        <button id="b-mouse" class="ghost" type="button">改用滑鼠或觸控</button>
+      </div>
+      <p id="err" class="err"></p>
+      <p class="small">畫面與鏡頭不會離開這部裝置。請先點一下以開啟鏡頭與聲音。<br />按 M 靜音，按 Esc 清空琴弦。</p>
+    </section>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
